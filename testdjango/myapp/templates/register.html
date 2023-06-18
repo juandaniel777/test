@@ -1,0 +1,41 @@
+<form id="updateForm">
+    {% csrf_token %}
+    <label for="email">Correo electrónico:</label>
+    <input type="email" id="email" name="email">
+
+    <label for="newEmail">Nuevo correo electrónico:</label>
+    <input type="email" id="newEmail" name="new_email">
+
+    <label for="newPassword">Nueva contraseña:</label>
+    <input type="password" id="newPassword" name="new_password">
+
+    <button type="submit">Modificar Usuario</button>
+</form>
+
+<div id="message"></div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $('#updateForm').submit(function (event) {
+        event.preventDefault();
+
+        var formData = $(this).serialize();
+
+        $.ajax({
+            type: 'POST',
+            url: '/user_model/',
+            data: formData,
+            success: function (response) {
+                $('#message').text(response.message);
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                var response = xhr.responseJSON;
+                if (response && response.message) {
+                    $('#message').text(response.message);
+                } else {
+                    $('#message').text('Error al modificar el usuario.');
+                }
+            }
+        });
+    });
+</script>
